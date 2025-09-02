@@ -1,5 +1,5 @@
-import { Logger } from "@std/log";
-import ky from "ky";
+import { Logger } from "jsr:@std/log";
+import ky from "npm:ky";
 import { Log } from "./type.ts";
 
 /**

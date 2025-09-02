@@ -1,4 +1,4 @@
-import { join } from "@std/path";
+import { join } from "jsr:@std/path";
 import { Log } from "./type.ts";
 import { HttpRequest } from "./api.ts";
 

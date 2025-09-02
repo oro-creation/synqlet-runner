@@ -5,9 +5,9 @@ import {
   getRunnerJob,
   updateRunnerJob,
 } from "./api.ts";
-import { getLogger } from "@std/log";
-import { delay } from "@std/async";
-import { Table } from "@cliffy/table";
+import { getLogger } from "jsr:@std/log";
+import { delay } from "jsr:@std/async";
+import { Table } from "jsr:@cliffy/table@^1.0.0-rc.8";
 import { executeTypeScriptCode } from "./execute.ts";
 import { Log } from "./type.ts";
 
