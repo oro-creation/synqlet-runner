@@ -88,7 +88,7 @@ export async function getPendingRunnerJobs(
           runnerId: { eq: runnerId },
           status: { eq: "Pending" },
         }),
-        relations: JSON.stringify([{ name: "trigger" }]),
+        // relations: JSON.stringify([{ name: "trigger" }]),
       },
       headers: { "X-RUNNER-Key": runnerKey },
     });
