@@ -103,6 +103,7 @@ export async function runner(
           env: job.environmentVariables,
           triggerName: job.trigger?.name,
           httpRequest: job.httpRequest,
+          formValues: job.formValues,
         });
 
         await updateLogsAndCheckCancel({

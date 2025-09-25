@@ -1,6 +1,6 @@
 import { join } from "jsr:@std/path";
 import { Log } from "./type.ts";
-import { HttpRequest } from "./api.ts";
+import { FormValue, HttpRequest } from "./api.ts";
 
 const fileNameMain = "main.ts";
 const fileNameEntry = "entry.ts";
@@ -15,13 +15,13 @@ export type ExecuteResult = { type: "success"; result: unknown } | {
   type: "cancel";
 };
 
-function triggerType(
-  { triggerName, httpRequest }: {
+function triggerValue(
+  { triggerName, httpRequest, formValues }: {
     triggerName: string | undefined;
     httpRequest: HttpRequest | undefined;
+    formValues: ReadonlyArray<FormValue> | undefined;
   },
 ): string {
-  console.log(triggerName);
   if (typeof triggerName !== "string") {
     return "undefined";
   }
@@ -39,6 +39,18 @@ function triggerType(
   jsonBody: ${JSON.stringify(httpRequest.jsonBody)},
 }`
       : ""
+  }${
+    formValues
+      ? `formValues: {${
+        formValues.map(({ code, fieldType, value }) =>
+          `[${JSON.stringify(code)}]: ${
+            fieldType === "Date" || fieldType === "DateTime"
+              ? `new Date(${value})`
+              : JSON.stringify(value)
+          }`
+        )
+      }}`
+      : ""
   }
   }`;
 }
@@ -47,11 +59,12 @@ function triggerType(
  * TypeScript のコードを実行
  */
 export async function executeTypeScriptCode(
-  { code, env, triggerName, httpRequest, timeout, signal }: {
+  { code, env, triggerName, httpRequest, formValues, timeout, signal }: {
     code: string;
     env: ReadonlyArray<{ name: string; value: string }>;
     triggerName: string | undefined;
     httpRequest: HttpRequest | undefined;
+    formValues: ReadonlyArray<FormValue> | undefined;
     timeout: number;
     signal: AbortSignal;
   },
@@ -72,7 +85,7 @@ import { main } from "./${fileNameMain}";
 
 await Deno.writeTextFile("./${fileNameResult}", JSON.stringify(await main({
   env: ${JSON.stringify(Object.fromEntries(env.map((e) => [e.name, e.value])))},
-  trigger: ${triggerType({ triggerName, httpRequest })},
+  trigger: ${triggerValue({ triggerName, httpRequest, formValues })},
 })));
 `,
     );

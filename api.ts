@@ -53,6 +53,22 @@ export type HttpRequest = {
   jsonBody: unknown;
 };
 
+export type FormValue = {
+  code: string;
+} & {
+  value: unknown;
+  fieldType:
+    | "Id"
+    | "Text"
+    | "MultipleText"
+    | "Option"
+    | "Date"
+    | "DateTime"
+    | "Number"
+    | "Money"
+    | "Boolean";
+};
+
 /**
  * ランナージョブ一覧
  * エラー発生時は空配列を返し、loggerに出力
@@ -77,6 +93,7 @@ export async function getPendingRunnerJobs(
       name: string;
     };
     httpRequest?: HttpRequest;
+    formValues?: ReadonlyArray<FormValue>;
   }>;
 }> {
   try {
@@ -88,7 +105,7 @@ export async function getPendingRunnerJobs(
           runnerId: { eq: runnerId },
           status: { eq: "Pending" },
         }),
-        // relations: JSON.stringify([{ name: "trigger" }]),
+        relations: JSON.stringify([{ name: "trigger" }]),
       },
       headers: { "X-RUNNER-Key": runnerKey },
     });
