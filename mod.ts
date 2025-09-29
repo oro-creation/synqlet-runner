@@ -138,15 +138,17 @@ export async function runner(
         if (e instanceof Error) {
           logger.info(`Job error: ${e.message}`);
 
-          await updateRunnerJob({
-            apiUrl,
-            runnerKey,
-            runnerJobId: job.id,
-            status: "Error",
-            errorReason: e.stack,
-          });
-
-          continue;
+          try {
+            await updateRunnerJob({
+              apiUrl,
+              runnerKey,
+              runnerJobId: job.id,
+              status: "Error",
+              errorReason: e.stack,
+            });
+          } catch (e) {
+            logger.error(`Failed to update runner jobs: ${e}`);
+          }
         }
       }
     }
