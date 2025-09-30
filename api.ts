@@ -98,7 +98,7 @@ export async function getPendingRunnerJobs(
 }> {
   try {
     // なぜか fetch を使うと connection closed before message completed ERRORが出るため ky で代用
-    const res = ky.get("runner-jobs", {
+    const res = await ky.get("runner-jobs", {
       prefixUrl: apiUrl,
       searchParams: {
         filter: JSON.stringify({
